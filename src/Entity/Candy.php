@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CandyRepository::class)]
 class Candy
@@ -19,6 +20,7 @@ class Candy
 
     #[ORM\Column(length: 50)]
     #[Groups(['candy:read'])]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -33,16 +35,19 @@ class Candy
      * @var Collection<int, Color>
      */
     #[ORM\ManyToMany(targetEntity: Color::class, inversedBy: 'candies')]
+    #[Groups(['candy:read'])]
     private Collection $colors;
 
     /**
      * @var Collection<int, Taste>
      */
     #[ORM\ManyToMany(targetEntity: Taste::class, inversedBy: 'candies')]
+    #[Groups(['candy:read'])]
     private Collection $tastes;
 
     #[ORM\ManyToOne(inversedBy: 'candies')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['candy:read'])]
     private ?Brand $brand = null;
 
     public function __construct()
